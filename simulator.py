@@ -1,8 +1,6 @@
 import os
 from datetime import datetime
-import time
 import numpy as np
-import matplotlib.pyplot as plt
 from env import Environment
 from policy.rs import RS
 from policy.rsopt import RS_OPT
@@ -19,7 +17,6 @@ warnings.simplefilter('ignore', category=RuntimeWarning)
 class Simulator(object):
     def __init__(self, trial, step, K):
         self.policy = {RS(K): 'RS', RS_OPT(K): 'RS_OPT', RS_CH(K): 'RS_CH', SRS(K): 'SRS', SRS_OPT(K): 'SRS_OPT', SRS_CH(K): 'SRS_CH', TS(K): 'TS', UCB1(K): 'UCB1', UCB1_tuned(K): 'UCB1_tuned'}
-        self.policy_plot_name = ['RS($ℵ=p_{max}$)', 'RS-OPT', 'RS-CH', 'SRS($ℵ=p_{max}$)', 'SRS-OPT', 'SRS-CH', 'TS', 'UCB1', 'UCB1-tuned']
         self.trial = trial
         self.step = step
         self.K = K
