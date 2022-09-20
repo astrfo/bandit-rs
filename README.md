@@ -13,10 +13,8 @@ def main():
 ```
 
 ### 2. 検証したいアルゴリズムを選択する
-`simulator.py`の`self.policy`で検証したいアルゴリズムを，`self.policy_plot_name`でそれに対応するアルゴリズム名を入れてください．
+`simulator.py`の`self.policy`で検証したいアルゴリズムを入れてください．
 `self.policy`が辞書型になっているのはRS, RS-OPT, SRS, SRS-OPTの際にℵを設定できるようにするためです(l.57 setting参照してもらえると)．
-CSVファイルをlogフォルダに保存するので`self.policy_plot_name`をいちいち変更するの面倒だなと感じる人はl.51をコメントアウトしてもらえれば動くと思います(多分)．
-一応，簡素ですがCSVをプロットするプログラムは[ここ](https://github.com/astrfo/csv-plot)にあるので使ってどうぞ．
 
 #### アルゴリズム一覧
 - RS(ℵ=p_max)
@@ -29,9 +27,25 @@ CSVファイルをlogフォルダに保存するので`self.policy_plot_name`を
 - UCB1
 - UCB1-Tuned
 
-### 3. 以下のコマンドを実行する
+### 3. コマンドを実行する
 ```
 python main.py
+```
+結果のCSVファイルとパラメータを記載したテキストファイルをlogフォルダに保存する．
+```
+.
+├── log
+│   └── datetime(例：202209200909)
+│       ├── xx.csv(例：RS.csv)
+│       ├── yy.csv
+│       └── zz.csv
+```
+
+### 4. 生成したCSVファイルをプロットする
+グラフのタイトルとプロットしたいCSVが格納されているフォルダ名(例：202209200909)を指定してグラフのプロットを行います． 
+生成したグラフはCSVと同じ階層にcsv_plot.pngという名前で保存されます．
+```
+python plot.py [グラフのtitle] [プロットしたいCSVが格納されているフォルダ名]
 ```
 
 ## 注意
