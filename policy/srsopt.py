@@ -19,7 +19,7 @@ class SRS_OPT(object):
         self.b = self.n / self.rho - self.N + self.epsilon
         self.SRS = (self.N + self.b.max()) * self.rho - self.n
         self.SRS = np.nan_to_num(self.SRS, nan=self.epsilon)
-        if min(self.SRS) < 0: self.SRS -= min(self.SRS) + self.epsilon
+        if min(self.SRS) <= 0: self.SRS -= min(self.SRS) - self.epsilon
         self.pi = self.SRS / np.sum(self.SRS)
 
     def select_arm(self):
