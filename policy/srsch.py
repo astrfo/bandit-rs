@@ -17,13 +17,13 @@ class SRS_CH(object):
         self.pipi = np.zeros((self.K, 2))
         self.pi = np.zeros(self.K)
         self.V = np.array([0.5] * self.K)
-        self.n = np.array([self.epsilon] * self.K)
+        self.n = np.zeros(self.K)
         self.N = np.zeros(self.K)
 
     def select_arm(self):
         G = np.random.choice(np.where(self.V == self.V.max())[0])
         cpV = copy.deepcopy(self.V)
-        if (self.V.max() > self.aleph).all(): cpV -= cpV.max() - self.aleph + self.epsilon
+        if (self.V.max() >= self.aleph).all(): cpV -= cpV.max() - self.aleph + self.epsilon
         for i in range(self.K):
             if i != G:
                 self.mu[i] = np.exp(-self.n[i] * self.D_KL(cpV[i], cpV[G]))
@@ -56,13 +56,20 @@ class SRS_CH(object):
         for i in range(self.K):
             self.pi[i] = (self.pipi[i][0]/self.pipi[i][1]) / sum_pi
         
-        arm = np.random.choice(len(self.pi), p=self.pi)
+        current_prob = np.random.rand()
+        top = self.K
+        bottom = -1
+        while (top - bottom > 1):
+            mid = int(bottom + (top - bottom)/2)
+            if current_prob < np.sum(self.pi[0:mid]): top = mid
+            else: bottom = mid
+        if mid == bottom: arm = mid
+        else: arm = mid-1
         return arm
 
     def D_KL(self, p, q):
         return p*np.log(p/q) + (1-p)*np.log((1-p) / (1-q))
         
     def update(self, arm, reward):
-        self.alpha = 1 / (1 + self.n[arm])
-        self.V[arm] = (1 - self.alpha) * self.V[arm] + (reward * self.alpha)
         self.n[arm] += 1
+        self.V[arm] += (1 / (1 + self.n[arm])) * (reward - self.V[arm])
