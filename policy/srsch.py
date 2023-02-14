@@ -1,9 +1,10 @@
 import numpy as np
 import copy
+import sys
 
 class SRS_CH(object):
     def __init__(self, K):
-        self.epsilon = 1e-4
+        self.epsilon = sys.float_info.epsilon
         self.K = K
 
     def initialize(self):
@@ -16,7 +17,7 @@ class SRS_CH(object):
         self.pipi = np.zeros((self.K, 2))
         self.pi = np.zeros(self.K)
         self.V = np.array([0.5] * self.K)
-        self.n = np.array([1e-4] * self.K)
+        self.n = np.array([self.epsilon] * self.K)
         self.N = np.zeros(self.K)
 
     def select_arm(self):
@@ -40,12 +41,12 @@ class SRS_CH(object):
 
                 self.SRS[i][0] = (self.N[i] + self.b[i].max()) * self.rho[i][0] - self.n[i]
                 self.SRS[i][1] = (self.N[i] + self.b[i].max()) * self.rho[i][1] - self.n[G]
-                self.SRS[i] = np.nan_to_num(self.SRS[i], nan=1e-4)
+                self.SRS[i] = np.nan_to_num(self.SRS[i], nan=self.epsilon)
 
                 self.pipi[i][0] = self.SRS[i][0] / (self.SRS[i][0] + self.SRS[i][1])
                 self.pipi[i][1] = self.SRS[i][1] / (self.SRS[i][0] + self.SRS[i][1])
-                if (self.pipi[i][0] <= 0.0):self.pipi[i][0] = 1e-4
-                if (self.pipi[i][1] <= 0.0):self.pipi[i][1] = 1e-4
+                if (self.pipi[i][0] <= 0.0): self.pipi[i][0] = self.epsilon
+                if (self.pipi[i][1] <= 0.0): self.pipi[i][1] = self.epsilon
             else:
                 self.pipi[G] = 0.5
         sum_pi = 0.0
