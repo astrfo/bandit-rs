@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 import numpy as np
+from tqdm import tqdm
 from env import Environment
 from policy.rs import RS
 from policy.rsopt import RS_OPT
@@ -8,6 +9,9 @@ from policy.rsch import RS_CH
 from policy.srs import SRS
 from policy.srsopt import SRS_OPT
 from policy.srsch import SRS_CH
+from policy.srsch2 import SRS_CH2
+from policy.srsch_a import SRS_CHa
+from policy.srsch_d import SRS_CHd
 from policy.ts import TS
 from policy.ucb1 import UCB1
 from policy.ucb1_tuned import UCB1_tuned
@@ -16,7 +20,8 @@ warnings.simplefilter('ignore', category=RuntimeWarning)
 
 class Simulator(object):
     def __init__(self, trial, step, K):
-        self.policy = {RS(K): 'RS', RS_OPT(K): 'RS_OPT', RS_CH(K): 'RS_CH', SRS(K): 'SRS', SRS_OPT(K): 'SRS_OPT', SRS_CH(K): 'SRS_CH', TS(K): 'TS', UCB1(K): 'UCB1', UCB1_tuned(K): 'UCB1_tuned'}
+        # self.policy = {RS(K): 'RS', RS_OPT(K): 'RS_OPT', RS_CH(K): 'RS_CH', SRS(K): 'SRS', SRS_OPT(K): 'SRS_OPT', SRS_CH(K): 'SRS_CH', TS(K): 'TS', UCB1(K): 'UCB1', UCB1_tuned(K): 'UCB1_tuned'}
+        self.policy = {SRS_CHd(K): 'SRS_CHd'}
         self.trial = trial
         self.step = step
         self.K = K
@@ -25,8 +30,8 @@ class Simulator(object):
 
     def run(self):
         for policy, name in self.policy.items():
-            for t in range(self.trial):
-                self.env = Environment(self.K)
+            for t in tqdm(range(self.trial)):
+                self.env = Environment(self.K, t)
                 self.prob = self.env.prob
                 self.setting(name, policy)
                 policy.initialize()
