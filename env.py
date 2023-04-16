@@ -1,8 +1,9 @@
 import numpy as np
 
 class Environment(object):
-    def __init__(self, K):
+    def __init__(self, K, seed):
         self.K = K
+        np.random.seed(seed)
         self.prob = np.random.rand(self.K)
 
     def play(self, arm):
