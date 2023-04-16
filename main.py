@@ -1,9 +1,9 @@
 from simulator import Simulator
 
 def main():
-    trial = 1000
-    step = 1000
-    K = 2
+    trial = 100
+    step = 10000
+    K = 4
     sim = Simulator(trial, step, K)
     sim.run()
 
